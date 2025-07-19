@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Final Combined Report</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+    }
+    h2 {
+      background-color: #f0f0f0;
+      padding: 8px;
+    }
+    .section {
+      margin-bottom: 20px;
+    }
+    .checklist-item {
+      margin-bottom: 5px;
+    }
+    .label {
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <h2>Final Perfusion Report</h2>
+
+  <div class="section">
+    <h3>Patient Information</h3>
+    {% for key, value in form_data.items() %}
+      <div><span class="label">{{ key.replace('_', ' ').title() }}:</span> {{ value }}</div>
+    {% endfor %}
+  </div>
+
+  <div class="section">
+    <h3>Calculated Data</h3>
+    {% for key, value in calculated_data.items() %}
+      <div><span class="label">{{ key }}:</span> {{ value }}</div>
+    {% endfor %}
+  </div>
+
+  <div class="section">
+    <h3>Pre-Bypass Checklist</h3>
+    {% for key, value in checklist_data.items() %}
+      <div class="checklist-item">
+        <span class="label">{{ key.replace('_', ' ').title() }}:</span> {{ value }}
+      </div>
+    {% endfor %}
+  </div>
+
+</body>
+</html>

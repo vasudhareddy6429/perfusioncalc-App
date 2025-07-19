@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Perfusion Pre-Bypass Checklist & Report</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    /* Color Palette Variables - Sleek Dark Glass Design */
+    :root {
+      --bg-deep-dark: #2C5F6B; /* Deep Teal */
+      --bg-gradient-end: #214A53; /* Slightly darker Deep Teal for gradient depth */
+      --glass-base-color: rgba(74, 124, 138, 0.15); /* Translucent Steel Teal for glass elements */
+      --glass-border-color: #4A7C8A; /* Steel Teal for glass border */
+      --text-light: #FFFFFF; /* White for primary text */
+      --text-muted: #9aa7bd; /* Muted blue-grey for secondary text/placeholders */
+      --accent-main-light: #00BCD4; /* Ocean Cyan - primary vibrant accent */
+      --accent-main-dark: #00838F; /* Darker Ocean Cyan for hover/focus */
+      --shadow-deep: rgba(44, 95, 107, 0.6); /* Deep shadow based on Deep Teal */
+      --button-glow: rgba(0, 188, 212, 0.5); /* Ocean Cyan glow for buttons */
+      --checked-green: #4CAF50; /* Green for checked items */
+      --error-red: #dc3545; /* Red for not checked items */
+      --table-header-bg: rgba(74, 124, 138, 0.3); /* Slightly more opaque glass for table headers */
+
+      /* Transparent Black Button Colors */
+      --submit-btn-transparent-bg: rgba(0, 0, 0, 0.5); /* 50% transparent black */
+      --submit-btn-transparent-hover: rgba(0, 0, 0, 0.7); /* 70% transparent black on hover */
+      --submit-btn-transparent-border: rgba(255, 255, 255, 0.3); /* Subtle white border */
+      --submit-btn-transparent-shadow: rgba(0, 0, 0, 0.4); /* Dark shadow for transparent button */
+      --submit-btn-transparent-glow: rgba(255, 255, 255, 0.2); /* Subtle white glow */
+    }
+
+    body {
+      background: linear-gradient(135deg, var(--bg-deep-dark) 0%, var(--bg-gradient-end) 100%); /* Deep, luxurious gradient */
+      color: var(--text-light);
+      font-family: 'Inter', sans-serif;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      overflow-x: hidden;
+      padding: 40px 20px; /* Padding around the main container */
+      position: relative;
+    }
+
+    /* Subtle background pattern/texture */
+    body::before {
+        content: '';
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: radial-gradient(circle at 10% 20%, rgba(255,255,255,0.01) 0%, transparent 50%),
+                    radial-gradient(circle at 90% 80%, rgba(255,255,255,0.01) 0%, transparent 50%);
+        opacity: 0.8;
+        z-index: -1;
+    }
+
+    .report-wrapper {
+      background-color: var(--glass-base-color); /* Glass form card */
+      backdrop-filter: blur(15px); /* Stronger blur for form */
+      -webkit-backdrop-filter: blur(15px);
+      padding: 40px;
+      border-radius: 25px; /* More rounded for softer look */
+      box-shadow: 0 0 50px var(--shadow-deep), 0 0 20px var(--button-glow); /* Deep shadow with Ocean Cyan glow */
+      border: 1px solid var(--glass-border-color);
+      max-width: 1200px; /* Wider for better table layout */
+      width: 100%;
+    }
+
+    .logo-container {
+      text-align: right;
+      margin-bottom: 30px;
+    }
+    .logo-container img {
+      max-height: 100px;
+      width: auto;
+      border-radius: 15px;
+      box-shadow: 0 0 15px rgba(255, 255, 255, 0.1);
+    }
+
+    h2 {
+      font-family: 'Montserrat', sans-serif;
+      color: var(--text-light);
+      font-size: 2.2em;
+      font-weight: 700;
+      margin-bottom: 25px;
+      padding-bottom: 10px;
+      border-bottom: 2px solid var(--accent-main-light);
+      text-shadow: 0 0 10px rgba(255,255,255,0.2);
+    }
+
+    h3 {
+      font-family: 'Montserrat', sans-serif;
+      color: var(--text-light);
+      font-size: 1.6em;
+      font-weight: 600;
+      margin-top: 30px;
+      margin-bottom: 15px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid var(--glass-border-color);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: separate; /* For rounded corners on cells */
+      border-spacing: 0;
+      margin-bottom: 25px;
+      border-radius: 10px; /* Rounded corners for the table */
+      overflow: hidden; /* Ensures rounded corners are visible */
+      background-color: rgba(0, 0, 0, 0.1); /* Slightly transparent dark background for tables */
+    }
+
+    th, td {
+      border: 1px solid var(--glass-border-color);
+      padding: 12px 15px;
+      text-align: center;
+      vertical-align: middle;
+      color: var(--text-light);
+    }
+
+    th {
+      background-color: var(--table-header-bg); /* Slightly more opaque glass for headers */
+      font-weight: 600;
+      color: var(--text-light);
+      white-space: nowrap;
+    }
+
+    /* Input fields within tables */
+    table input[type="text"], table input[type="number"], table textarea {
+      width: calc(100% - 10px); /* Account for padding */
+      background-color: rgba(0, 0, 0, 0.3); /* More transparent dark input background */
+      color: var(--text-light);
+      border: 1px solid var(--glass-border-color);
+      border-radius: 8px; /* Rounded input fields */
+      text-align: center;
+      box-sizing: border-box;
+      padding: 8px 10px;
+      transition: all 0.3s ease;
+    }
+
+    table input:focus, table textarea:focus {
+      border-color: var(--accent-main-light);
+      box-shadow: 0 0 0 3px rgba(0, 188, 212, 0.3), inset 0 0 10px rgba(0, 188, 212, 0.2); /* Ocean Cyan glow on focus */
+      background-color: rgba(0, 0, 0, 0.4); /* Slightly darker on focus */
+      outline: none;
+    }
+
+    textarea {
+      height: 80px; /* Increased height */
+      resize: vertical;
+    }
+
+    .checklist {
+      display: flex;
+      flex-direction: column;
+      gap: 15px; /* More space between checklist items */
+      font-size: 1.1em;
+      margin-top: 20px;
+      margin-bottom: 30px;
+    }
+
+    .checklist label {
+      display: flex;
+      align-items: center;
+      cursor: pointer;
+      color: var(--text-light);
+      font-weight: 400; /* Regular font weight */
+      transition: color 0.3s ease;
+    }
+
+    .checklist label:hover {
+        color: var(--accent-main-light);
+    }
+
+    .checklist input[type="checkbox"] {
+      appearance: none; /* Hide default checkbox */
+      -webkit-appearance: none;
+      width: 24px;
+      height: 24px;
+      border: 2px solid var(--glass-border-color);
+      border-radius: 6px;
+      margin-right: 15px;
+      position: relative;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      background-color: rgba(0, 0, 0, 0.2);
+    }
+
+    .checklist input[type="checkbox"]:checked {
+      background-color: var(--checked-green); /* Green when checked */
+      border-color: var(--checked-green);
+      box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.3);
+    }
+
+    .checklist input[type="checkbox"]::after {
+      content: '✔'; /* Checkmark symbol */
+      font-size: 18px;
+      color: white;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) scale(0);
+      transition: transform 0.2s ease-in-out;
+    }
+
+    .checklist input[type="checkbox"]:checked::after {
+      transform: translate(-50%, -50%) scale(1);
+    }
+
+    .submit-button {
+      display: block;
+      width: 100%;
+      padding: 18px;
+      font-size: 1.2em;
+      background: var(--submit-btn-transparent-bg); /* Transparent black background */
+      color: white; /* White text */
+      font-weight: 700;
+      border: 1px solid var(--submit-btn-transparent-border); /* Subtle white border */
+      border-radius: 15px; /* More rounded button */
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 10px 30px var(--submit-btn-transparent-shadow); /* Dark shadow */
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      margin-top: 40px;
+    }
+
+    .submit-button:hover {
+      background: var(--submit-btn-transparent-hover); /* Darker transparent black on hover */
+      transform: translateY(-3px);
+      box-shadow: 0 15px 40px var(--submit-btn-transparent-shadow); /* Stronger dark shadow on hover */
+    }
+
+    .submit-button:active {
+      transform: translateY(0);
+      box-shadow: 0 5px 15px var(--submit-btn-transparent-shadow);
+    }
+
+    /* Responsive Adjustments */
+    @media (max-width: 992px) {
+      .report-wrapper {
+        padding: 30px;
+      }
+      h2 {
+        font-size: 1.8em;
+      }
+      h3 {
+        font-size: 1.4em;
+      }
+      th, td {
+        padding: 10px;
+      }
+    }
+
+    @media (max-width: 768px) {
+      body {
+        padding: 20px 10px;
+      }
+      .report-wrapper {
+        padding: 25px;
+        border-radius: 20px;
+      }
+      .logo-container {
+        text-align: center;
+        margin-bottom: 20px;
+      }
+      .logo-container img {
+        max-height: 80px;
+      }
+      h2 {
+        font-size: 1.6em;
+        text-align: center;
+      }
+      h3 {
+        font-size: 1.3em;
+        text-align: center;
+      }
+      th, td {
+        padding: 8px;
+        font-size: 0.9em;
+      }
+      table input[type="text"], table input[type="number"], table textarea {
+        padding: 6px 8px;
+        font-size: 0.85em;
+      }
+      textarea {
+        height: 60px;
+      }
+      .checklist {
+        gap: 10px;
+        font-size: 1em;
+      }
+      .checklist input[type="checkbox"] {
+        width: 20px;
+        height: 20px;
+        margin-right: 10px;
+      }
+      .checklist input[type="checkbox"]::after {
+        font-size: 16px;
+      }
+      .submit-button {
+        padding: 14px;
+        font-size: 1em;
+        border-radius: 12px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      body {
+        padding: 10px;
+      }
+      .report-wrapper {
+        padding: 15px;
+        border-radius: 15px;
+      }
+      .logo-container img {
+        max-height: 60px;
+      }
+      h2 {
+        font-size: 1.4em;
+      }
+      h3 {
+        font-size: 1.1em;
+      }
+      th, td {
+        padding: 5px;
+        font-size: 0.8em;
+      }
+      table input[type="text"], table input[type="number"], table textarea {
+        padding: 4px 6px;
+        font-size: 0.75em;
+      }
+      textarea {
+        height: 50px;
+      }
+      .checklist {
+        gap: 8px;
+        font-size: 0.9em;
+      }
+      .checklist input[type="checkbox"] {
+        width: 18px;
+        height: 18px;
+        margin-right: 8px;
+      }
+      .checklist input[type="checkbox"]::after {
+        font-size: 14px;
+      }
+      .submit-button {
+        padding: 12px;
+        font-size: 0.9em;
+        border-radius: 10px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="report-wrapper">
+    <div class="logo-container">
+      <img src="{{ url_for('static', filename='logo.png') }}" alt="Hospital Logo">
+    </div>
+    <h2>Perfusion Report - Pre-Bypass Details</h2>
+
+    <form action="{{ url_for('pre_bypass_checklist') }}" method="post">
+      <table>
+        <tr>
+          <td>Name</td><td><input type="text" name="patient_name_display" value="{{ initial_form_data.patient_name }}" readonly></td>
+          <td>Sex</td><td><input type="text" name="sex_display" value="{{ initial_form_data.sex }}" readonly></td>
+          <td>Date</td><td><input type="text" name="date_display" value="{{ initial_form_data.date }}" readonly></td>
+          <td>Age</td><td><input type="text" name="age_display" value="{{ initial_form_data.age }}" readonly></td>
+        </tr>
+        <tr>
+          <td>Height</td><td><input type="text" name="height_display" value="{{ initial_form_data.height }}" readonly></td>
+          <td>Weight</td><td><input type="text" name="weight_display" value="{{ initial_form_data.weight }}" readonly></td>
+          <td>Surface Area</td><td><input type="text" name="BSA_display" value="{{ initial_form_data.BSA }}" readonly></td>
+          <td>Comp. Flow L/min</td><td><input type="text" name="flow_rate_display" value="{{ initial_form_data.FlowRate }}" readonly></td>
+        </tr>
+        <tr>
+          <td>Avg. Flow L/min</td><td><input type="text" name="avg_blood_flow_display" value="{{ initial_form_data.AvgBloodFlow }}" readonly></td>
+          <td>Oxygenator</td><td><input type="text" name="oxygenator" value="{{ initial_form_data.oxygenator if initial_form_data.oxygenator else '' }}"></td>
+          <td>Filter</td><td><input type="text" name="filter" value="{{ initial_form_data.filter if initial_form_data.filter else '' }}"></td>
+          <td>Circuit</td><td><input type="text" name="circuit_type" value="{{ initial_form_data.circuit_type if initial_form_data.circuit_type else '' }}"></td>
+        </tr>
+        <tr>
+          <td>Cardioplegia</td><td><input type="text" name="cardioplegia_dosage_display" value="{{ initial_form_data.CardioplegiaDosage }}" readonly></td>
+          <td>Pump ON Time</td><td><input type="text" name="pump_on_time" value="{{ initial_form_data.pump_on_time if initial_form_data.pump_on_time else '' }}"></td>
+          <td>Pump OFF Time</td><td><input type="text" name="pump_off_time" value="{{ initial_form_data.pump_off_time if initial_form_data.pump_off_time else '' }}"></td>
+          <td>Total Pump Time</td><td><input type="text" name="total_pump_time" value="{{ initial_form_data.total_pump_time if initial_form_data.total_pump_time else '' }}"></td>
+        </tr>
+        <tr>
+          <td>AOT/FIB ARR</td><td><input type="text" name="aot_fib_arr" value="{{ initial_form_data.aot_fib_arr if initial_form_data.aot_fib_arr else '' }}"></td>
+          <td>POT/TCA</td><td><input type="text" name="pot_tca" value="{{ initial_form_data.pot_tca if initial_form_data.pot_tca else '' }}"></td>
+          <td>Pre-Diagnosis</td><td colspan="3"><input type="text" name="diagnosis_display" value="{{ initial_form_data.diagnosis }}" readonly></td>
+        </tr>
+        <tr>
+          <td>Procedure</td><td colspan="7"><input type="text" name="surgery_type_display" value="{{ initial_form_data.surgery_type }}" readonly></td>
+        </tr>
+      </table>
+
+      <table>
+        <tr>
+          <td colspan="2">Heparinisation Dose (mg)</td>
+          <td colspan="2">Time</td>
+          <td colspan="2">ACT Time</td>
+          <td colspan="2">ACT Value</td>
+        </tr>
+        <tr>
+          <td colspan="2"><input type="text" name="heparin_dose" value="{{ initial_form_data.heparin_dose if initial_form_data.heparin_dose else '' }}"></td>
+          <td colspan="2"><input type="text" name="heparin_time" value="{{ initial_form_data.heparin_time if initial_form_data.heparin_time else '' }}"></td>
+          <td colspan="2"><input type="text" name="act_time" value="{{ initial_form_data.act_time if initial_form_data.act_time else '' }}"></td>
+          <td colspan="2"><input type="text" name="act_value" value="{{ initial_form_data.act_value if initial_form_data.act_value else '' }}"></td>
+        </tr>
+        <tr>
+          <td colspan="4">Blood Group</td>
+          <td colspan="2">Unit</td>
+          <td colspan="2">Time</td>
+        </tr>
+        <tr>
+          <td colspan="4"><input type="text" name="blood_group" value="{{ initial_form_data.blood_group if initial_form_data.blood_group else '' }}"></td>
+          <td colspan="2"><input type="text" name="blood_unit" value="{{ initial_form_data.blood_unit if initial_form_data.blood_unit else '' }}"></td>
+          <td colspan="2"><input type="text" name="blood_time" value="{{ initial_form_data.blood_time if initial_form_data.blood_time else '' }}"></td>
+        </tr>
+      </table>
+
+      <h3>Cannulation</h3>
+      <table>
+        <tr>
+          <td>SVC (fr)</td><td><input type="text" name="svc_fr" value="{{ initial_form_data.svc_fr if initial_form_data.svc_fr else '' }}"></td>
+          <td>IVC (fr)</td><td><input type="text" name="ivc_fr" value="{{ initial_form_data.ivc_fr if initial_form_data.ivc_fr else '' }}"></td>
+          <td>Aortic (fr)</td><td><input type="text" name="aortic_fr" value="{{ initial_form_data.aortic_fr if initial_form_data.aortic_fr else '' }}"></td>
+          <td>Vent (fr)</td><td><input type="text" name="vent_fr" value="{{ initial_form_data.vent_fr if initial_form_data.vent_fr else '' }}"></td>
+          <td>LSVC</td><td><input type="text" name="lsvc" value="{{ initial_form_data.lsvc if initial_form_data.lsvc else '' }}"></td>
+        </tr>
+      </table>
+
+      <h3>Cardioplegia Details</h3>
+      <table>
+        <tr>
+          <th>Amount</th><th>Time</th><th colspan="2">Plegiocard</th><th colspan="2">&nbsp;</th>
+        </tr>
+        <tr>
+          <td><input type="text" name="cardioplegia_amount_1" value="{{ initial_form_data.cardioplegia_amount_1 if initial_form_data.cardioplegia_amount_1 else '' }}"></td>
+          <td><input type="text" name="cardioplegia_time_1" value="{{ initial_form_data.cardioplegia_time_1 if initial_form_data.cardioplegia_time_1 else '' }}"></td>
+          <td colspan="4"><input type="text" name="plegiocard_1" value="{{ initial_form_data.plegiocard_1 if initial_form_data.plegiocard_1 else '' }}"></td>
+        </tr>
+        <tr>
+          <td><input type="text" name="cardioplegia_amount_2" value="{{ initial_form_data.cardioplegia_amount_2 if initial_form_data.cardioplegia_amount_2 else '' }}"></td>
+          <td><input type="text" name="cardioplegia_time_2" value="{{ initial_form_data.cardioplegia_time_2 if initial_form_data.cardioplegia_time_2 else '' }}"></td>
+          <td colspan="4"><input type="text" name="plegiocard_2" value="{{ initial_form_data.plegiocard_2 if initial_form_data.plegiocard_2 else '' }}"></td>
+        </tr>
+        <tr>
+          <td><input type="text" name="cardioplegia_amount_3" value="{{ initial_form_data.cardioplegia_amount_3 if initial_form_data.cardioplegia_amount_3 else '' }}"></td>
+          <td><input type="text" name="cardioplegia_time_3" value="{{ initial_form_data.cardioplegia_time_3 if initial_form_data.cardioplegia_time_3 else '' }}"></td>
+          <td colspan="4"><input type="text" name="plegiocard_3" value="{{ initial_form_data.plegiocard_3 if initial_form_data.plegiocard_3 else '' }}"></td>
+        </tr>
+        <tr>
+          <td><input type="text" name="cardioplegia_amount_4" value="{{ initial_form_data.cardioplegia_amount_4 if initial_form_data.cardioplegia_amount_4 else '' }}"></td>
+          <td><input type="text" name="cardioplegia_time_4" value="{{ initial_form_data.cardioplegia_time_4 if initial_form_data.cardioplegia_time_4 else '' }}"></td>
+          <td colspan="4"><input type="text" name="plegiocard_4" value="{{ initial_form_data.plegiocard_4 if initial_form_data.plegiocard_4 else '' }}"></td>
+        </tr>
+      </table>
+
+      <h3>Priming Volume (ml)</h3>
+      <table>
+        <tr><td>Packed Cells/Blood</td><td><input type="text" name="priming_packed_cells" value="{{ initial_form_data.priming_packed_cells if initial_form_data.priming_packed_cells else '' }}"></td></tr>
+        <tr><td>Plasma</td><td><input type="text" name="priming_plasma" value="{{ initial_form_data.priming_plasma if initial_form_data.priming_plasma else '' }}"></td></tr>
+        <tr><td>Mannitol</td><td><input type="text" name="priming_mannitol" value="{{ initial_form_data.priming_mannitol if initial_form_data.priming_mannitol else '' }}"></td></tr>
+        <tr><td>Total</td><td><input type="text" name="priming_total" value="{{ initial_form_data.priming_total if initial_form_data.priming_total else '' }}"></td></tr>
+      </table>
+
+      <h3>Pump Drugs (mg)</h3>
+      <table>
+        <tr><td>Sodium Bicarbonate</td><td><input type="text" name="drug_sodium_bicarbonate" value="{{ initial_form_data.drug_sodium_bicarbonate if initial_form_data.drug_sodium_bicarbonate else '' }}"></td></tr>
+        <tr><td>Heparin</td><td><input type="text" name="drug_heparin" value="{{ initial_form_data.drug_heparin if initial_form_data.drug_heparin else '' }}"></td></tr>
+        <tr><td>Solu-Medrol</td><td><input type="text" name="drug_solu_medrol" value="{{ initial_form_data.drug_solu_medrol if initial_form_data.drug_solu_medrol else '' }}"></td></tr>
+        <tr><td>Others</td><td><input type="text" name="drug_others" value="{{ initial_form_data.drug_others if initial_form_data.drug_others else '' }}"></td></tr>
+      </table>
+
+      <table>
+        <tr><th colspan="5">Pre-Op Details</th><th colspan="5">Post-Op Details</th></tr>
+        <tr>
+          <td>Pressure</td><td>AMP</td><td>PA</td><td>CVP</td><td>K+</td>
+          <td>Pressure</td><td>AMP</td><td>PA</td><td>CVP</td><td>K+</td>
+        </tr>
+        <tr>
+          <td><input type="text" name="preop_pressure" value="{{ initial_form_data.preop_pressure if initial_form_data.preop_pressure else '' }}"></td>
+          <td><input type="text" name="preop_amp" value="{{ initial_form_data.preop_amp if initial_form_data.preop_amp else '' }}"></td>
+          <td><input type="text" name="preop_pa" value="{{ initial_form_data.preop_pa if initial_form_data.preop_pa else '' }}"></td>
+          <td><input type="text" name="preop_cvp" value="{{ initial_form_data.preop_cvp if initial_form_data.preop_cvp else '' }}"></td>
+          <td><input type="text" name="preop_k" value="{{ initial_form_data.preop_k if initial_form_data.preop_k else '' }}"></td>
+          <td><input type="text" name="postop_pressure" value="{{ initial_form_data.postop_pressure if initial_form_data.postop_pressure else '' }}"></td>
+          <td><input type="text" name="postop_amp" value="{{ initial_form_data.postop_amp if initial_form_data.postop_amp else '' }}"></td>
+          <td><input type="text" name="postop_pa" value="{{ initial_form_data.postop_pa if initial_form_data.postop_pa else '' }}"></td>
+          <td><input type="text" name="postop_cvp" value="{{ initial_form_data.postop_cvp if initial_form_data.postop_cvp else '' }}"></td>
+          <td><input type="text" name="postop_k" value="{{ initial_form_data.postop_k if initial_form_data.postop_k else '' }}"></td>
+        </tr>
+      </table>
+
+      <h3>Urine Output on CPB (ml)</h3>
+      <table>
+        <tr><td></td><td>Amount (ml)</td><td>Time</td></tr>
+        <tr><td>CUF</td><td><input type="text" name="cuf_amount" value="{{ initial_form_data.cuf_amount if initial_form_data.cuf_amount else '' }}"></td><td><input type="text" name="cuf_time" value="{{ initial_form_data.cuf_time if initial_form_data.cuf_time else '' }}"></td></tr>
+        <tr><td>MUF</td><td><input type="text" name="muf_amount" value="{{ initial_form_data.muf_amount if initial_form_data.muf_amount else '' }}"></td><td><input type="text" name="muf_time" value="{{ initial_form_data.muf_time if initial_form_data.muf_time else '' }}"></td></tr>
+        <tr><td>Total</td><td><input type="text" name="urine_total_amount" value="{{ initial_form_data.urine_total_amount if initial_form_data.urine_total_amount else '' }}"></td><td><input type="text" name="urine_total_time" value="{{ initial_form_data.urine_total_time if initial_form_data.urine_total_time else '' }}"></td></tr>
+      </table>
+
+      <h3>Reperfusion</h3>
+      <textarea name="reperfusion">{{ initial_form_data.reperfusion if initial_form_data.reperfusion else '' }}</textarea>
+      <h3>Comments</h3>
+      <textarea name="comment">{{ initial_form_data.comment if initial_form_data.comment else '' }}</textarea>
+
+      <h3>Blood Gas</h3>
+      <table>
+        <tr>
+          <th>ABG Time</th><th>PH</th><th>PCO2</th><th>PO2</th><th>SPO2</th><th>HCT</th><th>K+</th><th>Ca</th><th>Lact</th>
+        </tr>
+        <tr>
+          <td><input type="text" name="abg_time_1" value="{{ initial_form_data.abg_time_1 if initial_form_data.abg_time_1 else '' }}"></td>
+          <td><input type="text" name="abg_ph_1" value="{{ initial_form_data.abg_ph_1 if initial_form_data.abg_ph_1 else '' }}"></td>
+          <td><input type="text" name="abg_pco2_1" value="{{ initial_form_data.abg_pco2_1 if initial_form_data.abg_pco2_1 else '' }}"></td>
+          <td><input type="text" name="abg_po2_1" value="{{ initial_form_data.abg_po2_1 if initial_form_data.abg_po2_1 else '' }}"></td>
+          <td><input type="text" name="abg_spo2_1" value="{{ initial_form_data.abg_spo2_1 if initial_form_data.abg_spo2_1 else '' }}"></td>
+          <td><input type="text" name="abg_hct_1" value="{{ initial_form_data.abg_hct_1 if initial_form_data.abg_hct_1 else '' }}"></td>
+          <td><input type="text" name="abg_k_1" value="{{ initial_form_data.abg_k_1 if initial_form_data.abg_k_1 else '' }}"></td>
+          <td><input type="text" name="abg_ca_1" value="{{ initial_form_data.abg_ca_1 if initial_form_data.abg_ca_1 else '' }}"></td>
+          <td><input type="text" name="abg_lact_1" value="{{ initial_form_data.abg_lact_1 if initial_form_data.abg_lact_1 else '' }}"></td>
+        </tr>
+        {% for i in range(2, 6) %}
+          <tr>
+            <td><input type="text" name="abg_time_{{ i }}" value="{{ initial_form_data['abg_time_' + i|string] if initial_form_data['abg_time_' + i|string] else '' }}"></td>
+            <td><input type="text" name="abg_ph_{{ i }}" value="{{ initial_form_data['abg_ph_' + i|string] if initial_form_data['abg_ph_' + i|string] else '' }}"></td>
+            <td><input type="text" name="abg_pco2_{{ i }}" value="{{ initial_form_data['abg_pco2_' + i|string] if initial_form_data['abg_pco2_' + i|string] else '' }}"></td>
+            <td><input type="text" name="abg_po2_{{ i }}" value="{{ initial_form_data['abg_po2_' + i|string] if initial_form_data['abg_po2_' + i|string] else '' }}"></td>
+            <td><input type="text" name="abg_spo2_{{ i }}" value="{{ initial_form_data['abg_spo2_' + i|string] if initial_form_data['abg_spo2_' + i|string] else '' }}"></td>
+            <td><input type="text" name="abg_hct_{{ i }}" value="{{ initial_form_data['abg_hct_' + i|string] if initial_form_data['abg_hct_' + i|string] else '' }}"></td>
+            <td><input type="text" name="abg_k_{{ i }}" value="{{ initial_form_data['abg_k_' + i|string] if initial_form_data['abg_k_' + i|string] else '' }}"></td>
+            <td><input type="text" name="abg_ca_{{ i }}" value="{{ initial_form_data['abg_ca_' + i|string] if initial_form_data['abg_ca_' + i|string] else '' }}"></td>
+            <td><input type="text" name="abg_lact_{{ i }}" value="{{ initial_form_data['abg_lact_' + i|string] if initial_form_data['abg_lact_' + i|string] else '' }}"></td>
+          </tr>
+        {% endfor %}
+      </table>
+
+      <h3>Drugs</h3>
+      <table>
+        <tr>
+          <th rowspan="2">Drug</th>
+          <th colspan="3">Dose (mg)</th>
+          <th colspan="3">Time</th>
+        </tr>
+        <tr>
+          <th>1</th><th>2</th><th>3</th><th>1</th><th>2</th><th>3</th>
+        </tr>
+        {% set drugs = ['INJ. FENTANYL', 'INJ. MIDAZOLAM', 'INJ. VECURONIUM', 'INJ. LASIX'] %}
+        {% for i in range(drugs|length) %}
+        <tr>
+          <td>{{ drugs[i] }}</td>
+          <td><input type="text" name="drug_{{ i+1 }}_dose_1" value="{{ initial_form_data['drug_' + (i+1)|string + '_dose_1'] if initial_form_data['drug_' + (i+1)|string + '_dose_1'] else '' }}"></td>
+          <td><input type="text" name="drug_{{ i+1 }}_dose_2" value="{{ initial_form_data['drug_' + (i+1)|string + '_dose_2'] if initial_form_data['drug_' + (i+1)|string + '_dose_2'] else '' }}"></td>
+          <td><input type="text" name="drug_{{ i+1 }}_dose_3" value="{{ initial_form_data['drug_' + (i+1)|string + '_dose_3'] if initial_form_data['drug_' + (i+1)|string + '_dose_3'] else '' }}"></td>
+          <td><input type="text" name="drug_{{ i+1 }}_time_1" value="{{ initial_form_data['drug_' + (i+1)|string + '_time_1'] if initial_form_data['drug_' + (i+1)|string + '_time_1'] else '' }}"></td>
+          <td><input type="text" name="drug_{{ i+1 }}_time_2" value="{{ initial_form_data['drug_' + (i+1)|string + '_time_2'] if initial_form_data['drug_' + (i+1)|string + '_time_2'] else '' }}"></td>
+          <td><input type="text" name="drug_{{ i+1 }}_time_3" value="{{ initial_form_data['drug_' + (i+1)|string + '_time_3'] if initial_form_data['drug_' + (i+1)|string + '_time_3'] else '' }}"></td>
+        </tr>
+        {% endfor %}
+      </table>
+
+      <h3>✅ Pre-Bypass Safety Checklist</h3>
+      <div class="checklist">
+        <label><input type="checkbox" name="Pump Checked" {% if initial_form_data['Pump Checked'] == 'on' %}checked{% endif %}> Pump Checked</label>
+        <label><input type="checkbox" name="Oxygenator Checked" {% if initial_form_data['Oxygenator Checked'] == 'on' %}checked{% endif %}> Oxygenator Checked</label>
+        <label><input type="checkbox" name="Tubing Connected" {% if initial_form_data['Tubing Connected'] == 'on' %}checked{% endif %}> Tubing Connected</label>
+        <label><input type="checkbox" name="Heparin Administered" {% if initial_form_data['Heparin Administered'] == 'on' %}checked{% endif %}> Heparin Administered</label>
+        <label><input type="checkbox" name="ACT ≥ 480 Seconds" {% if initial_form_data['ACT ≥ 480 Seconds'] == 'on' %}checked{% endif %}> ACT ≥ 480 Seconds</label>
+        <label><input type="checkbox" name="Temperature Monitoring Ready" {% if initial_form_data['Temperature Monitoring Ready'] == 'on' %}checked{% endif %}> Temperature Monitoring Ready</label>
+        <label><input type="checkbox" name="Emergency Drugs Ready" {% if initial_form_data['Emergency Drugs Ready'] == 'on' %}checked{% endif %}> Emergency Drugs Ready</label>
+        <label><input type="checkbox" name="Defibrillator Checked" {% if initial_form_data['Defibrillator Checked'] == 'on' %}checked{% endif %}> Defibrillator Checked</label>
+        <label><input type="checkbox" name="Blood Products Available" {% if initial_form_data['Blood Products Available'] == 'on' %}checked{% endif %}> Blood Products Available</label>
+        <label><input type="checkbox" name="Backup Circuit Ready" {% if initial_form_data['Backup Circuit Ready'] == 'on' %}checked{% endif %}> Backup Circuit Ready</label>
+      </div>
+
+      <button class="submit-button" type="submit">Submit & Generate Final Report</button>
+    </form>
+  </div>
+</body>
+</html>
