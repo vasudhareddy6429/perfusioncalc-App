@@ -1,5 +1,4 @@
 # perfusioncalc-App
-Got it. Here's a clean version of your `README.md` file **without emojis** and formatted for professional use:
 
 ---
 
