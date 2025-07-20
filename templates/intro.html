@@ -1,0 +1,490 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>PerfusionCalc Introduction</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    /* Color Palette Variables - Luxurious Glass Dark Theme */
+    :root {
+      --bg-dark-primary: #0a0a1a; /* Even deeper, rich dark blue/purple background */
+      --glass-base-color: rgba(255, 255, 255, 0.05); /* Base for glass elements */
+      --glass-border-color: rgba(255, 255, 255, 0.15); /* Border for glass elements */
+      --text-light: #f0f0f0; /* Near-white for primary text */
+      --text-muted: #c0c0d0; /* Soft grey for secondary text */
+      --accent-gradient-start: #ff7e5f; /* Orange-Red for gradient accent */
+      --accent-gradient-end: #ff416c; /* Vibrant Pink-Red for gradient accent */
+      --button-glass-bg: rgba(255, 0, 80, 0.25); /* Base for button glass */
+      --button-glass-border: rgba(255, 0, 80, 0.4); /* Border for button glass */
+      --button-shadow-color: rgba(255, 50, 50, 0.6); /* Glow for button */
+      --card-shadow-color: rgba(0, 0, 0, 0.5); /* Deeper card shadow */
+    }
+
+    body, html {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      font-family: 'Poppins', sans-serif; /* Poppins for general text */
+      background: linear-gradient(135deg, var(--bg-dark-primary), #050510); /* Deep, luxurious gradient */
+      color: var(--text-light);
+      overflow-x: hidden; /* Prevent horizontal scroll */
+      position: relative;
+    }
+
+    /* Subtle background pattern/texture */
+    body::before {
+        content: '';
+        position: fixed; /* Fixed to viewport */
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: radial-gradient(circle at 10% 20%, rgba(255,255,255,0.02) 0%, transparent 50%),
+                    radial-gradient(circle at 90% 80%, rgba(255,255,255,0.02) 0%, transparent 50%);
+        opacity: 0.8;
+        z-index: -1;
+    }
+
+    .navbar {
+      background: rgba(255, 255, 255, 0.05); /* Transparent glass effect for navbar */
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 15px 40px; /* Increased padding */
+      position: sticky; /* Make navbar sticky */
+      top: 0;
+      z-index: 1000; /* Ensure it stays on top */
+      box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+    }
+
+    .navbar-brand img {
+      height: 120px; /* Adjusted logo height */
+      border-radius: 15px; /* Softly rounded logo */
+      box-shadow: 0 0 15px rgba(255, 255, 255, 0.1); /* Subtle glow */
+      transition: all 0.3s ease;
+    }
+
+    .navbar-brand img:hover {
+        transform: scale(1.03);
+        box-shadow: 0 0 25px rgba(255, 255, 255, 0.2);
+    }
+
+    .header-title {
+      text-align: center;
+      width: 100%;
+      font-size: 2.5rem; /* Larger title */
+      font-weight: 700;
+      font-family: 'Montserrat', sans-serif; /* Montserrat for titles */
+      color: var(--text-light);
+      text-shadow: 0 0 10px rgba(255,255,255,0.3); /* Subtle glow */
+    }
+
+    .login-button {
+      color: white;
+      background: linear-gradient(135deg, var(--button-glass-bg), rgba(255, 100, 0, 0.25)); /* Gradient for button */
+      border: 1px solid var(--button-glass-border); /* Border for glass button */
+      backdrop-filter: blur(12px); /* Stronger blur for glass effect */
+      -webkit-backdrop-filter: blur(12px);
+      padding: 10px 25px; /* Increased padding */
+      border-radius: 10px; /* Softer rounding */
+      font-weight: 600;
+      transition: all 0.3s ease;
+      box-shadow: 0 0 15px var(--button-shadow-color); /* Stronger glow */
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .login-button:hover {
+      background: linear-gradient(135deg, rgba(255, 0, 80, 0.4), rgba(255, 100, 0, 0.4));
+      box-shadow: 0 0 25px rgba(255, 80, 80, 0.8);
+      transform: translateY(-2px);
+    }
+    .login-button:active {
+        transform: translateY(0);
+        box-shadow: 0 0 10px rgba(255, 50, 50, 0.3);
+    }
+
+    .main-content-area {
+        max-width: 1000px; /* Overall content width */
+        margin: 40px auto; /* Center content */
+        padding: 0 20px; /* Horizontal padding */
+    }
+
+    h1.page-main-title {
+        font-family: 'Montserrat', sans-serif;
+        font-size: 3.5rem; /* Very large main title */
+        font-weight: 700;
+        text-align: center;
+        margin-top: 50px;
+        margin-bottom: 40px;
+        color: var(--text-light);
+        text-shadow: 0 0 20px rgba(255,255,255,0.4); /* Stronger glow */
+    }
+
+    h2 {
+      font-family: 'Montserrat', sans-serif; /* Montserrat for section titles */
+      font-size: 2rem; /* Larger section titles */
+      font-weight: 600;
+      margin-top: 60px; /* More space above sections */
+      margin-bottom: 25px;
+      color: var(--text-light);
+      text-shadow: 0 0 10px rgba(255,255,255,0.2);
+      border-bottom: 2px solid rgba(255,255,255,0.2); /* Subtle underline */
+      padding-bottom: 10px;
+    }
+
+    p.lead {
+      font-size: 1.1rem; /* Slightly larger paragraphs */
+      line-height: 1.8;
+      color: var(--text-muted);
+      margin-bottom: 30px;
+    }
+
+    .cpb-machine-img {
+      max-width: 500px; /* Increased max-width for image */
+      height: auto;
+      display: block;
+      margin: 40px auto; /* More margin */
+      border-radius: 20px; /* Softly rounded image */
+      box-shadow: 0 10px 30px rgba(0,0,0,0.5), 0 0 20px rgba(255,255,255,0.1); /* Deep shadow with subtle glow */
+      border: 1px solid rgba(255,255,255,0.1);
+    }
+
+    .grid-layout {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); /* Adjusted minmax for better fit */
+      gap: 30px; /* More space between cards */
+      margin-top: 40px;
+    }
+
+    .glass-card {
+      background: var(--glass-base-color); /* Base glass background */
+      backdrop-filter: blur(15px); /* Stronger blur */
+      -webkit-backdrop-filter: blur(15px);
+      border: 1px solid var(--glass-border-color); /* Glass border */
+      border-radius: 20px; /* Softer rounding */
+      padding: 25px; /* More internal padding */
+      color: var(--text-light);
+      box-shadow: 0 8px 25px var(--card-shadow-color), inset 0 0 10px rgba(255,255,255,0.03); /* Deeper shadow with inner glow */
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      display: flex; /* Flexbox for content alignment */
+      flex-direction: column;
+      justify-content: space-between; /* Push image/content to ends */
+      align-items: center;
+      text-align: center;
+    }
+
+    .glass-card:hover {
+      transform: translateY(-8px); /* More pronounced lift on hover */
+      box-shadow: 0 15px 40px rgba(0, 0, 0, 0.7), 0 0 20px rgba(255,255,255,0.15);
+      border-color: rgba(255,255,255,0.3);
+    }
+
+    .glass-card h3 {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 1.5rem; /* Larger card titles */
+      font-weight: 600;
+      margin-bottom: 15px;
+      color: var(--text-light);
+      text-shadow: 0 0 8px rgba(255,255,255,0.1);
+    }
+
+    .glass-card p {
+      font-size: 0.95rem; /* Slightly larger card text */
+      line-height: 1.6;
+      color: var(--text-muted);
+      flex-grow: 1; /* Allow paragraph to grow */
+    }
+
+    .glass-card img {
+      max-width: 80%; /* Adjusted image size within card */
+      height: auto;
+      display: block;
+      margin: 20px auto 0; /* More space above image */
+      border-radius: 12px; /* Softly rounded image */
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+      transition: transform 0.2s ease;
+    }
+
+    .glass-card:hover img {
+        transform: scale(1.05); /* Slight zoom on image hover */
+    }
+
+    footer {
+      text-align: center;
+      margin-top: 80px; /* More space above footer */
+      padding-bottom: 40px; /* Padding at bottom */
+      color: #aaa;
+      font-size: 0.9rem;
+    }
+
+    footer b {
+        color: var(--text-light);
+    }
+
+    /* Responsive Adjustments */
+    @media (max-width: 992px) {
+      .navbar {
+        padding: 15px 25px;
+      }
+      .navbar-brand img {
+        height: 100px;
+      }
+      h1.page-main-title {
+        font-size: 3rem;
+      }
+      h2 {
+        font-size: 1.8rem;
+      }
+      .grid-layout {
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 25px;
+      }
+      .glass-card {
+        padding: 20px;
+      }
+      .glass-card h3 {
+        font-size: 1.4rem;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .navbar {
+        padding: 10px 20px;
+      }
+      .navbar-brand img {
+        height: 80px;
+      }
+      .header-title {
+        font-size: 2rem;
+      }
+      h1.page-main-title {
+        font-size: 2.5rem;
+        margin-top: 30px;
+        margin-bottom: 30px;
+      }
+      h2 {
+        font-size: 1.6rem;
+        margin-top: 40px;
+        margin-bottom: 20px;
+      }
+      p.lead {
+        font-size: 1rem;
+      }
+      .cpb-machine-img {
+        max-width: 90%;
+        margin: 30px auto;
+      }
+      .grid-layout {
+        grid-template-columns: 1fr; /* Single column on smaller screens */
+        gap: 20px;
+      }
+      .glass-card {
+        max-width: 400px; /* Limit single column card width */
+        margin: 0 auto; /* Center single column cards */
+      }
+      .glass-card h3 {
+        font-size: 1.3rem;
+      }
+      .glass-card p {
+        font-size: 0.9rem;
+      }
+      .glass-card img {
+        max-width: 70%;
+      }
+      footer {
+        margin-top: 60px;
+        padding-bottom: 20px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .navbar {
+        flex-wrap: wrap;
+        justify-content: center;
+        padding: 10px 15px;
+      }
+      .navbar-brand {
+        margin-bottom: 10px;
+      }
+      .navbar-brand img {
+        height: 70px;
+      }
+      .login-button {
+        padding: 8px 18px;
+        font-size: 0.9rem;
+      }
+      .header-title {
+        font-size: 1.8rem;
+        margin-bottom: 20px;
+      }
+      h1.page-main-title {
+        font-size: 2rem;
+      }
+      h2 {
+        font-size: 1.4rem;
+      }
+      p.lead {
+        font-size: 0.9rem;
+      }
+      .main-content-area {
+        padding: 0 15px;
+      }
+      .glass-card {
+        padding: 18px;
+        border-radius: 15px;
+      }
+      .glass-card h3 {
+        font-size: 1.2rem;
+      }
+      .glass-card p {
+        font-size: 0.85rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <nav class="navbar">
+    <a class="navbar-brand" href="#">
+      <img src="/static/logo.png" alt="Logo" class="logo-img">
+    </a>
+    <a class="btn btn-outline-light login-button" href="/login">Login</a>
+  </nav>
+
+  <div class="text-center mt-3 mb-4">
+    <h1 class="header-title">PerfusionCalc Introduction</h1>
+  </div>
+
+  <div class="main-content-area">
+    <h2 class="text-white mb-4">What is Cardiac Perfusion?</h2>
+    <p class="text-white lead">
+      Cardiac perfusion refers to the flow of blood through the coronary arteries to the heart muscle (myocardium). It ensures the heart receives enough oxygen and nutrients to function properly. Adequate perfusion is vital for maintaining healthy heart tissue and preventing conditions like angina or heart attacks. It is often evaluated using imaging techniques such as myocardial perfusion scans.
+    </p>
+
+    <h2 class="text-white my-4">Who is a Cardiac Perfusionist?</h2>
+    <p class="text-white lead">
+      A cardiac perfusionist is a specialized healthcare professional who operates the **heart-lung machine** during open-heart surgeries. They manage the patient's **circulation and respiratory functions** while the heart is stopped, ensuring oxygenated blood continues to flow throughout the body. Perfusionists also monitor blood pressure, temperature, and other vital signs during the procedure. They play a critical role in surgeries like **coronary artery bypass grafting (CABG)** and **heart valve repair or replacement**.
+    </p>
+
+    <h2 class="text-white my-4">Cardiopulmonary Bypass (CPB) Machine</h2>
+    <p class="text-white lead">
+      The CPB machine, or cardiopulmonary bypass machine, is used during open-heart surgery to take over the functions of the heart and lungs. It pumps blood through the body, oxygenates it, and removes carbon dioxide while the heart is stopped. This allows surgeons to operate on a still and bloodless heart. The machine also helps maintain the patient's body temperature during the procedure. A cardiac perfusionist is responsible for operating the CPB machine.
+    </p>
+
+    <div class="text-center my-4">
+      <img src="/static/cpb_machine.png" alt="CPB Machine" class="img-fluid cpb-machine-img">
+    </div>
+
+    <h2 class="text-center my-5">Components of the CPB Machine</h2>
+
+    <div class="grid-layout">
+      <div class="glass-card">
+        <h3>Cardiotomy Reservoir</h3>
+        <p>Collects blood suctioned from the surgical field and removes large particulates, air, and debris...</p>
+        <img src="/static/cardiotomy_reservoir.png" alt="Cardiotomy Reservoir">
+      </div>
+
+      <div class="glass-card">
+        <h3>Venous Reservoir</h3>
+        <p>Serves as the collection chamber for deoxygenated blood returning from the patient...</p>
+        <img src="/static/venous_reservoir.png" alt="Venous Reservoir">
+      </div>
+
+      <div class="glass-card">
+        <h3>Oxygenator</h3>
+        <p>Functions as the artificial lung of the bypass circuit. Enriches venous blood with oxygen...</p>
+        <img src="/static/oxygenator.png" alt="Oxygenator">
+      </div>
+
+      <div class="glass-card">
+        <h3>Oxygenator with Integrated Filter</h3>
+        <p>Combines gas exchange with arterial filtration in one unit. Captures microemboli and particulates...</p>
+        <img src="/static/oxygenator_integrated.png" alt="Integrated Oxygenator">
+      </div>
+
+      <div class="glass-card">
+        <h3>Cardioplegia Set</h3>
+        <p>Delivers cooled cardioplegia solution to arrest the heart safely. Reduces myocardial metabolism...</p>
+        <img src="/static/cardioplegia_set.png" alt="Cardioplegia Set">
+      </div>
+
+      <div class="glass-card">
+        <h3>System Panel</h3>
+        <p>The centralized command station for the CPB circuit. Displays real-time data on pressures...</p>
+        <img src="/static/system_panel.png" alt="System Panel">
+      </div>
+
+      <div class="glass-card">
+        <h3>Pressure Controller</h3>
+        <p>Maintains safe and consistent arterial line pressure. Prevents damage to patient vessels...</p>
+        <img src="/static/pressure_controller.png" alt="Pressure Controller">
+      </div>
+
+      <div class="glass-card">
+        <h3>Level Controller</h3>
+        <p>Monitors reservoir levels continuously. Automatically stops the pump to prevent air entrainment...</p>
+        <img src="/static/level_controller.png" alt="Level Controller">
+      </div>
+
+      <div class="glass-card">
+        <h3>Bubble Detector</h3>
+        <p>Continuously scans for microbubbles in the blood path. Triggers alarms or stops the pump...</p>
+        <img src="/static/bubble_detector.png" alt="Bubble Detector">
+      </div>
+
+      <div class="glass-card">
+        <h3>Bubble Trapper</h3>
+        <p>Physically captures air bubbles within the blood circuit. Removes residual gas before delivery...</p>
+        <img src="/static/bubble_trapper.png" alt="Bubble Trapper">
+      </div>
+
+      <div class="glass-card">
+        <h3>Roller Pump</h3>
+        <p>Drives blood through the circuit using rotating rollers. Gently compresses tubing to generate flow...</p>
+        <img src="/static/roller_pump.png" alt="Roller Pump">
+      </div>
+
+      <div class="glass-card">
+        <h3>Centrifugal Pump</h3>
+        <p>Generates flow via a spinning impeller. Reduces shear stress and provides non-pulsatile flow...</p>
+        <img src="/static/centrifugal_pump.png" alt="Centrifugal Pump">
+      </div>
+
+      <div class="glass-card">
+        <h3>Temperature Monitor</h3>
+        <p>Continuously tracks patient and circuit blood temperature. Enables precise heating/cooling...</p>
+        <img src="/static/temperature_monitor.png" alt="Temperature Monitor">
+      </div>
+
+      <div class="glass-card">
+        <h3>Heater-Cooler Machine</h3>
+        <p>Controls blood and cardioplegia temperature during bypass. Supports myocardial protection...</p>
+        <img src="/static/heater_cooler_machine.png" alt="Heater Cooler Machine">
+      </div>
+
+      <div class="glass-card">
+        <h3>Tubings</h3>
+        <p>Connects all circuit components with medical-grade materials. Maintains sterile blood pathways...</p>
+        <img src="/static/tubings.png" alt="Tubings">
+      </div>
+
+      <div class="glass-card">
+        <h3>Connect HL7</h3>
+        <p>Interfaces the CPB machine with hospital systems using HL7 standards for data exchange...</p>
+        <img src="/static/connect_hl7.png" alt="Connect HL7">
+      </div>
+    </div>
+
+    <footer class="my-5">
+      <p>Thank you for exploring PerfusionCalc. Crafted with care for cardiac perfusionists and healthcare professionals.</p>
+      <p>&copy; 2025 PerfusionCalc | Designed by <b>vasudhareddy</b></p>
+    </footer>
+  </div>
+</body>
+</html>

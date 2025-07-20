@@ -1,0 +1,624 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Perfusion Report</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    /* Color Palette Variables - Dark Mode Dashboard */
+    :root {
+      --bg-dark-primary: #1a1a2e; /* Deep purple-blue background */
+      --card-dark: #2a2a4a; /* Slightly lighter dark for cards */
+      --text-light: #e0e0e0; /* Light grey for primary text */
+      --text-muted: #a0a0b0; /* Muted grey for secondary text */
+      --accent-purple: #8e44ad; /* Vibrant purple accent */
+      --accent-orange: #e67e22; /* Vibrant orange accent */
+      --accent-blue: #3498db; /* Clean blue accent */
+      --success: #2ecc71; /* Green for success */
+      --error: #e74c3c; /* Red for errors */
+      --border-subtle: rgba(255, 255, 255, 0.08); /* Very subtle light border */
+      --shadow-soft: rgba(0, 0, 0, 0.3); /* Soft, diffused shadow for depth */
+    }
+
+    /* Global Base Styles */
+    body {
+      font-family: 'Inter', sans-serif; /* Clean, modern sans-serif */
+      margin: 0;
+      padding: 40px; /* Overall page padding */
+      background-color: var(--bg-dark-primary);
+      color: var(--text-light);
+      line-height: 1.6;
+      font-size: 16px;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* Main Report Wrapper - The Dashboard Container */
+    .report-wrapper {
+      width: 100%;
+      max-width: 1100px; /* Wider for dashboard feel */
+      background-color: var(--card-dark);
+      border-radius: 20px; /* Soft, pronounced rounding */
+      box-shadow: 0 15px 40px var(--shadow-soft); /* Deep, soft shadow */
+      overflow: hidden;
+      border: 1px solid var(--border-subtle); /* Subtle outer border */
+    }
+
+    /* Header Section - Dashboard Top Bar */
+    .header-section {
+      background-color: var(--card-dark); /* Matches card background */
+      padding: 30px 45px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid var(--border-subtle); /* Subtle separator */
+    }
+
+    .header-section .logo {
+      max-height: 100px; /* Increased logo size */
+      width: auto;
+      border-radius: 12px; /* Softly rounded logo */
+      box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+      filter: brightness(1.1); /* Make logo pop slightly */
+    }
+
+    .header-section h1 {
+      font-family: 'Inter', sans-serif;
+      font-size: 2.2em;
+      font-weight: 700;
+      color: var(--text-light);
+      margin: 0;
+      text-align: right;
+      line-height: 1.1;
+      letter-spacing: -0.5px;
+    }
+
+    /* Print Button Container */
+    .print-button-container {
+      background-color: var(--card-dark);
+      padding: 20px 45px;
+      text-align: right;
+      border-bottom: 1px solid var(--border-subtle);
+    }
+
+    .print-button-container button {
+      /* Glass-type aesthetic for the print button */
+      background: rgba(46, 204, 113, 0.2); /* Semi-transparent green background */
+      backdrop-filter: blur(8px); /* Frosted glass effect */
+      -webkit-backdrop-filter: blur(8px); /* Safari support */
+      color: var(--success); /* Green text color */
+      padding: 12px 28px;
+      font-size: 1.0em;
+      border: 1px solid rgba(46, 204, 113, 0.4); /* Green border */
+      border-radius: 10px; /* Rounded button */
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 15px rgba(46, 204, 113, 0.2); /* Green shadow */
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+    }
+
+    .print-button-container button:hover {
+      background: rgba(46, 204, 113, 0.3); /* Slightly more opaque on hover */
+      transform: translateY(-3px);
+      box-shadow: 0 8px 20px rgba(46, 204, 113, 0.4);
+      border-color: rgba(46, 204, 113, 0.6); /* More visible border on hover */
+    }
+
+    .print-button-container button:active {
+      transform: translateY(0);
+      box-shadow: 0 2px 5px rgba(46, 204, 113, 0.2);
+      background: rgba(46, 204, 113, 0.15); /* Slightly less opaque on active */
+    }
+
+    /* Main Content Grid - Data Modules */
+    .content-grid {
+      padding: 40px 45px;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 30px;
+    }
+
+    /* Section Styling (Individual Cards) */
+    .section {
+      background-color: var(--card-dark);
+      padding: 25px;
+      border-radius: 15px; /* Soft, pronounced rounding for cards */
+      box-shadow: 0 8px 20px var(--shadow-soft);
+      border: 1px solid var(--border-subtle);
+      display: flex;
+      flex-direction: column;
+    }
+
+    .section h2 {
+      font-family: 'Inter', sans-serif;
+      font-size: 1.7em;
+      font-weight: 700;
+      color: var(--text-light);
+      margin-top: 0;
+      margin-bottom: 20px;
+      padding-bottom: 10px;
+      border-bottom: 2px solid var(--accent-purple); /* Purple accent line */
+    }
+
+    .section h3 {
+      font-family: 'Inter', sans-serif;
+      font-size: 1.2em;
+      font-weight: 600;
+      color: var(--text-light);
+      margin-top: 25px;
+      margin-bottom: 15px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid var(--border-subtle); /* Subtle separator */
+    }
+
+    /* Table Styling within Cards */
+    .section table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 15px;
+      font-size: 0.9em;
+      border: none;
+    }
+
+    .section th, .section td {
+      border: 1px solid var(--border-subtle);
+      padding: 10px 15px;
+      text-align: left;
+      vertical-align: top;
+      color: var(--text-light);
+    }
+
+    .section th {
+      background-color: rgba(255, 255, 255, 0.05); /* Very subtle light tint for headers */
+      font-weight: 500;
+      color: var(--text-muted);
+      white-space: nowrap;
+    }
+
+    .section tr:nth-child(even) {
+      background-color: rgba(255, 255, 255, 0.02); /* Even more subtle stripe */
+    }
+
+    /* Specific Card Adjustments */
+    .section.full-width {
+      grid-column: 1 / -1;
+    }
+
+    /* Patient Info & Calculated Data - Data Readouts */
+    .patient-calculated-info {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 18px;
+      margin-top: 18px;
+    }
+    .patient-calculated-info div {
+      background-color: rgba(255, 255, 255, 0.05); /* Subtle light tint for data chips */
+      padding: 16px;
+      border-radius: 10px; /* Soft rounding for chips */
+      border: 1px solid var(--border-subtle);
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+    .patient-calculated-info div strong {
+      display: block;
+      font-size: 0.85em;
+      color: var(--text-muted);
+      margin-bottom: 5px;
+      font-weight: 400;
+    }
+    .patient-calculated-info div span {
+      font-size: 1.1em;
+      font-weight: 600;
+      color: var(--accent-orange); /* Orange for values */
+    }
+
+    /* Circuit Diagram */
+    .circuit-container {
+      text-align: center;
+      margin-top: 30px;
+      padding: 30px;
+      background-color: rgba(255, 255, 255, 0.05); /* Subtle light tint */
+      border-radius: 15px;
+      border: 1px solid var(--border-subtle);
+      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    }
+
+    .circuit-container img.circuit {
+      max-width: 70%; /* Reduced image size */
+      height: auto;
+      border-radius: 12px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+    }
+
+    /* Checklist Styling */
+    .checklist-item {
+        margin-bottom: 8px;
+        padding: 6px 0;
+        display: flex;
+        align-items: center;
+        font-size: 0.95em;
+        color: var(--text-light);
+    }
+    .checklist-item span {
+        font-weight: 400;
+        margin-right: 10px;
+        color: var(--text-muted);
+    }
+    .checklist-item .status {
+        font-weight: 600;
+    }
+    .checklist-item .status.checked {
+        color: var(--success);
+    }
+    .checklist-item .status.not-checked {
+        color: var(--error);
+    }
+    p {
+        margin-bottom: 15px;
+        line-height: 1.6;
+        color: var(--text-muted);
+    }
+
+    /* Print Specific Styles */
+    @media print {
+      body {
+        background-color: #fff;
+        padding: 0;
+        margin: 0;
+        font-size: 10px;
+        color: #333;
+      }
+      .report-wrapper {
+        box-shadow: none;
+        border: none;
+        border-radius: 0;
+        margin: 0;
+        padding: 0;
+        max-width: none;
+        background-color: #fff;
+      }
+      .header-section {
+        background: #ffffff;
+        color: #333;
+        border-bottom: 1px solid #ccc;
+        padding: 15px 20px;
+      }
+      .header-section .logo {
+        max-height: 80px;
+        box-shadow: none;
+      }
+      .header-section h1 {
+        font-size: 2em;
+        letter-spacing: normal;
+        color: #333;
+      }
+      .print-button-container {
+        display: none;
+      }
+      .content-grid {
+        padding: 15px 20px;
+        gap: 15px;
+        grid-template-columns: 1fr;
+      }
+      .section {
+        box-shadow: none;
+        border: 1px solid #eee;
+        margin-bottom: 15px;
+        padding: 15px;
+        border-radius: 0;
+        background-color: #fff;
+      }
+      .section h2 {
+        font-size: 1.4em;
+        border-bottom: 1px solid #ddd;
+        padding-bottom: 5px;
+        margin-bottom: 10px;
+        color: #333;
+      }
+      .section h3 {
+        font-size: 1.1em;
+        margin-top: 15px;
+        margin-bottom: 10px;
+        border-bottom: none;
+        color: #333;
+      }
+      .section th, .section td {
+        border: 1px solid #ddd;
+        color: #333;
+      }
+      .section th {
+        background-color: #f0f0f0;
+        color: #333;
+      }
+      .section tr:nth-child(even) {
+        background-color: #f9f9f9;
+      }
+      .patient-calculated-info div {
+        background-color: #f9f9f9;
+        box-shadow: none;
+        border: 1px solid #eee;
+      }
+      .patient-calculated-info div strong, .patient-calculated-info div span {
+        color: #333;
+      }
+      .circuit-container {
+        box-shadow: none;
+        border: 1px solid #eee;
+        background-color: #f9f9f9;
+        padding: 20px;
+      }
+      .circuit-container img.circuit {
+        box-shadow: none;
+      }
+      .checklist-item span, .checklist-item .status {
+        color: #333;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="report-wrapper">
+    <div class="header-section">
+      <img src="{{ url_for('static', filename='logo.png') }}" class="logo" alt="PerfusionCalc Logo">
+      <h1>PERFUSION REPORT</h1>
+    </div>
+
+    <div class="print-button-container">
+      <button onclick="window.print()">
+        <span style="font-size: 1.2em;">🖨️</span> PRINT REPORT
+      </button>
+    </div>
+
+    <div class="content-grid">
+      <!-- Patient & Calculated Data - Data Readouts -->
+      <div class="section full-width">
+        <h2>PATIENT & CALCULATED INFORMATION</h2>
+        <div class="patient-calculated-info">
+          <div><strong>Patient ID</strong><span>{{ report_data.patient_id | default('N/A') }}</span></div>
+          <div><strong>Patient Name</strong><span>{{ report_data.patient_name | default('N/A') }}</span></div>
+          <div><strong>Date Logged</strong><span>{{ report_data.date | default('N/A') }}</span></div>
+          <div><strong>Age</strong><span>{{ report_data.age | default('N/A') }}</span></div>
+          <div><strong>Sex</strong><span>{{ report_data.sex | default('N/A') }}</span></div>
+          <div><strong>Perfusionist</strong><span>{{ report_data.perfusionist_name | default('N/A') }}</span></div>
+          <div><strong>Patient Type</strong><span>{{ report_data.patient_type | default('N/A') }}</span></div>
+          <div><strong>Height</strong><span>{{ report_data.height | default('N/A') }}</span></div>
+          <div><strong>Weight</strong><span>{{ report_data.weight | default('N/A') }}</span></div>
+          <div><strong>Hemoglobin</strong><span>{{ report_data.hemoglobin | default('N/A') }}</span></div>
+          <div><strong>Diagnosis</strong><span>{{ report_data.diagnosis | default('N/A') }}</span></div>
+          <div><strong>Surgery Type</strong><span>{{ report_data.surgery_type | default('N/A') }}</span></div>
+          <div><strong>NYHA Class</strong><span>{{ report_data.nyha_class | default('N/A') }}</span></div>
+          <div><strong>Comorbidities</strong><span>{{ report_data.comorbidities | default('N/A') }}</span></div>
+          <div><strong>Notes</strong><span>{{ report_data.notes | default('N/A') }}</span></div>
+          <div><strong>Pre-op Creatinine</strong><span>{{ report_data.preop_creatinine | default('N/A') }}</span></div>
+          <div><strong>Pre-op INR</strong><span>{{ report_data.preop_inr | default('N/A') }}</span></div>
+          <div><strong>Pre-op Hematocrit</strong><span>{{ report_data.preop_hematocrit | default('N/A') }}</span></div>
+          <div><strong>BSA</strong><span>{{ report_data.BSA | default('N/A') }}</span></div>
+          <div><strong>EBV</strong><span>{{ report_data.EBV | default('N/A') }}</span></div>
+          <div><strong>Avg Blood Flow</strong><span>{{ report_data.AvgBloodFlow | default('N/A') }}</span></div>
+          <div><strong>Flow Rate</strong><span>{{ report_data.FlowRate | default('N/A') }}</span></div>
+          <div><strong>RBC Volume</strong><span>{{ report_data.RBCVolume | default('N/A') }}</span></div>
+          <div><strong>Cardioplegia Dosage</strong><span>{{ report_data.CardioplegiaDosage | default('N/A') }}</span></div>
+        </div>
+      </div>
+
+      <!-- Pre-Bypass Safety Checklist -->
+      <div class="section">
+        <h2>PRE-BYPASS SAFETY CHECKLIST</h2>
+        <div>
+          {% set checklist_items = [
+            'Pump Checked', 'Oxygenator Checked', 'Tubing Connected', 'Heparin Administered',
+            'ACT ≥ 480 Seconds', 'Temperature Monitoring Ready', 'Emergency Drugs Ready',
+            'Defibrillator Checked', 'Blood Products Available', 'Backup Circuit Ready'
+          ] %}
+          {% for item in checklist_items %}
+            <div class="checklist-item">
+                <span>{{ item }}:</span>
+                <span class="status {% if report_data[item] == 'on' %}checked{% else %}not-checked{% endif %}">
+                    {% if report_data[item] == 'on' %}✅ Checked{% else %}❌ Not Checked{% endif %}
+                </span>
+            </div>
+          {% endfor %}
+        </div>
+      </div>
+
+      <!-- Cannulation -->
+      <div class="section">
+        <h3>CANNULATION</h3>
+        <table>
+          <tr>
+            <th>SVC (fr)</th><td>{{ report_data.svc_fr | default('N/A') }}</td>
+          </tr>
+          <tr>
+            <th>IVC (fr)</th><td>{{ report_data.ivc_fr | default('N/A') }}</td>
+          </tr>
+          <tr>
+            <th>Aortic (fr)</td><td>{{ report_data.aortic_fr | default('N/A') }}</td>
+          </tr>
+          <tr>
+            <th>Vent (fr)</th><td>{{ report_data.vent_fr | default('N/A') }}</td>
+          </tr>
+          <tr>
+            <th>LSVC</th><td>{{ report_data.lsvc | default('N/A') }}</td>
+          </tr>
+        </table>
+      </div>
+
+      <!-- Priming Volume -->
+      <div class="section">
+        <h3>PRIMING VOLUME (ml)</h3>
+        <table>
+          <tr>
+            <th>Packed Cells/Blood</th><td>{{ report_data.priming_packed_cells | default('N/A') }}</td>
+          </tr>
+          <tr>
+            <th>Plasma</th><td>{{ report_data.priming_plasma | default('N/A') }}</td>
+          </tr>
+          <tr>
+            <th>Mannitol</th><td>{{ report_data.priming_mannitol | default('N/A') }}</td>
+          </tr>
+          <tr>
+            <th>Total</th><td>{{ report_data.priming_total | default('N/A') }}</td>
+          </tr>
+        </table>
+      </div>
+
+      <!-- Pump Drugs (mg) -->
+      <div class="section">
+        <h3>PUMP DRUGS (mg)</h3>
+        <table>
+          <tr>
+            <th>Sodium Bicarbonate</th><td>{{ report_data.drug_sodium_bicarbonate | default('N/A') }}</td>
+          </tr>
+          <tr>
+            <th>Heparin</th><td>{{ report_data.drug_heparin | default('N/A') }}</td>
+          </tr>
+          <tr>
+            <th>Solu-Medrol</th><td>{{ report_data.drug_solu_medrol | default('N/A') }}</td>
+          </tr>
+          <tr>
+            <th>Others</th><td>{{ report_data.drug_others | default('N/A') }}</td>
+          </tr>
+        </table>
+      </div>
+
+      <!-- Cardioplegia Details - Full width for better table display -->
+      <div class="section full-width">
+        <h2>CARDIOPLEGIA DETAILS</h2>
+        <table>
+          <tr>
+            <th>Amount</th><th>Time</th><th colspan="2">Plegiocard</th>
+          </tr>
+          {% for i in range(1, 5) %}
+            {% if report_data['cardioplegia_amount_' + i|string] or report_data['cardioplegia_time_' + i|string] or report_data['plegiocard_' + i|string] %}
+            <tr>
+              <td>{{ report_data['cardioplegia_amount_' + i|string] | default('N/A') }}</td>
+              <td>{{ report_data['cardioplegia_time_' + i|string] | default('N/A') }}</td>
+              <td colspan="2">{{ report_data['plegiocard_' + i|string] | default('N/A') }}</td>
+            </tr>
+            {% endif %}
+          {% endfor %}
+        </table>
+      </div>
+
+      <!-- Blood Gas - Full width for better table display -->
+      <div class="section full-width">
+        <h2>BLOOD GAS ANALYSIS</h2>
+        <table>
+          <tr>
+            <th>ABG Time</th><th>PH</th><th>PCO2</th><th>PO2</th><th>SPO2</th><th>HCT</th><th>K+</th><th>Ca</th><th>Lact</th>
+          </tr>
+          {% for i in range(1, 6) %}
+            {% if report_data['abg_time_' + i|string] or report_data['abg_ph_' + i|string] or report_data['abg_pco2_' + i|string] or report_data['abg_po2_' + i|string] or report_data['abg_spo2_' + i|string] or report_data['abg_hct_' + i|string] or report_data['abg_k_' + i|string] or report_data['abg_ca_' + i|string] or report_data['abg_lact_' + i|string] %}
+            <tr>
+              <td>{{ report_data['abg_time_' + i|string] | default('N/A') }}</td>
+              <td>{{ report_data['abg_ph_' + i|string] | default('N/A') }}</td>
+              <td>{{ report_data['abg_pco2_' + i|string] | default('N/A') }}</td>
+              <td>{{ report_data['abg_po2_' + i|string] | default('N/A') }}</td>
+              <td>{{ report_data['abg_spo2_' + i|string] | default('N/A') }}</td>
+              <td>{{ report_data['abg_hct_' + i|string] | default('N/A') }}</td>
+              <td>{{ report_data['abg_k_' + i|string] | default('N/A') }}</td>
+              <td>{{ report_data['abg_ca_' + i|string] | default('N/A') }}</td>
+              <td>{{ report_data['abg_lact_' + i|string] | default('N/A') }}</td>
+            </tr>
+            {% endif %}
+          {% endfor %}
+        </table>
+      </div>
+
+      <!-- Urine Output on CPB -->
+      <div class="section">
+        <h3>URINE OUTPUT ON CPB (ml)</h3>
+        <table>
+          <tr><th></th><th>Amount (ml)</th><th>Time</th></tr>
+          <tr><th>CUF</th><td>{{ report_data.cuf_amount | default('N/A') }}</td><td>{{ report_data.cuf_time | default('N/A') }}</td></tr>
+          <tr><th>MUF</th><td>{{ report_data.muf_amount | default('N/A') }}</td><td>{{ report_data.muf_time | default('N/A') }}</td></tr>
+          <tr><th>Total</th><td>{{ report_data.urine_total_amount | default('N/A') }}</td><td>{{ report_data.urine_total_time | default('N/A') }}</td></tr>
+        </table>
+      </div>
+
+      <!-- Pre/Post OP Details -->
+      <div class="section">
+        <h3>PRE/POST-OP DETAILS</h3>
+        <table>
+          <tr>
+            <th>Details</th>
+            <th>Pressure</th><th>AMP</th><th>PA</th><th>CVP</th><th>K+</th>
+          </tr>
+          <tr>
+            <th>Pre-Op</th>
+            <td>{{ report_data.preop_pressure | default('N/A') }}</td>
+            <td>{{ report_data.preop_amp | default('N/A') }}</td>
+            <td>{{ report_data.preop_pa | default('N/A') }}</td>
+            <td>{{ report_data.preop_cvp | default('N/A') }}</td>
+            <td>{{ report_data.preop_k | default('N/A') }}</td>
+          </tr>
+          <tr>
+            <th>Post-Op</th>
+            <td>{{ report_data.postop_pressure | default('N/A') }}</td>
+            <td>{{ report_data.postop_amp | default('N/A') }}</td>
+            <td>{{ report_data.postop_pa | default('N/A') }}</td>
+            <td>{{ report_data.postop_cvp | default('N/A') }}</td>
+            <td>{{ report_data.postop_k | default('N/A') }}</td>
+          </tr>
+        </table>
+      </div>
+
+      <!-- Reperfusion & Comments -->
+      <div class="section">
+        <h3>REPERFUSION & COMMENTS</h3>
+        <p><strong>Reperfusion:</strong> {{ report_data.reperfusion | default('N/A') }}</p>
+        <p><strong>Comments:</strong> {{ report_data.comment | default('N/A') }}</p>
+      </div>
+
+      <!-- Drugs Administered - Full width for better table display -->
+      <div class="section full-width">
+        <h2>DRUGS ADMINISTERED</h2>
+        <table>
+          <tr>
+            <th rowspan="2">Drug</th>
+            <th colspan="3">Dose (mg)</th>
+            <th colspan="3">Time</th>
+          </tr>
+          <tr>
+            <th>1</th><th>2</th><th>3</th><th>1</th><th>2</th><th>3</th>
+          </tr>
+          {% set drugs = ['INJ. FENTANYL', 'INJ. MIDAZOLAM', 'INJ. VECURONIUM', 'INJ. LASIX'] %}
+          {% for i in range(drugs|length) %}
+            {% if report_data['drug_' + (i+1)|string + '_dose_1'] or report_data['drug_' + (i+1)|string + '_dose_2'] or report_data['drug_' + (i+1)|string + '_dose_3'] or report_data['drug_' + (i+1)|string + '_time_1'] or report_data['drug_' + (i+1)|string + '_time_2'] or report_data['drug_' + (i+1)|string + '_time_3'] %}
+            <tr>
+              <td>{{ drugs[i] }}</td>
+              <td>{{ report_data['drug_' + (i+1)|string] | default('N/A') }}</td>
+              <td>{{ report_data['drug_' + (i+1)|string] | default('N/A') }}</td>
+              <td>{{ report_data['drug_' + (i+1)|string] | default('N/A') }}</td>
+              <td>{{ report_data['drug_' + (i+1)|string] | default('N/A') }}</td>
+              <td>{{ report_data['drug_' + (i+1)|string] | default('N/A') }}</td>
+              <td>{{ report_data['drug_' + (i+1)|string] | default('N/A') }}</td>
+            </tr>
+            {% endif %}
+          {% endfor %}
+        </table>
+      </div>
+
+      <!-- Circuit Diagram -->
+      <div class="section circuit-container full-width">
+        <h2>CIRCUIT DIAGRAM</h2>
+        {% if circuit_image_path %}
+          <img src="{{ circuit_image_path }}" alt="Circuit Image" class="circuit">
+        {% else %}
+          <p>No circuit diagram available.</p>
+        {% endif %}
+      </div>
+
+    </div> <!-- End content-grid -->
+  </div> <!-- End report-wrapper -->
+
+</body>
+</html>
